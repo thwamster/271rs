@@ -1,6 +1,7 @@
 use colored_text::Colorize;
-use rand::seq::IteratorRandom;
-use std::io;
+use std::fs::File;
+use std::io::Read;
+use std::io::stdin;
 
 fn main() {
 	println!("\nGET 6 CHANCES TO GUESS A 5-LETTER WORD");
@@ -75,16 +76,23 @@ fn is_valid_word(s: String) -> bool {
 
 fn get_input() -> String {
 	let mut s = String::new();
-	io::stdin().read_line(&mut s).expect("Failed to read line");
+	stdin().read_line(&mut s).expect("Failed to read line");
 	s.trim().to_string()
 }
 
 fn get_answer() -> String {
-	include_str!("closed_list.txt")
-		.lines()
-		.choose(&mut rand::rng())
+	let l: Vec<&str> = include_str!("closed_list.txt").lines().collect();
+	let i = get_random(l.len());
+	l[i].to_string()
+}
+
+fn get_random(n: usize) -> usize {
+	let mut buf = [0u8; 8];
+	File::open("/dev/urandom")
 		.unwrap()
-		.to_string()
+		.read_exact(&mut buf)
+		.unwrap();
+	usize::from_ne_bytes(buf) % n
 }
 
 fn get_results(s1: String, s2: String) -> String {
@@ -102,7 +110,9 @@ fn get_results(s1: String, s2: String) -> String {
 	}
 
 	for i in 0..5 {
-		if n[i] == 0 && let Some(o) = answer.iter().position(|&c| c == guess[i]) {
+		if n[i] == 0
+			&& let Some(o) = answer.iter().position(|&c| c == guess[i])
+		{
 			answer[o] = '\0';
 			n[i] = 1;
 		}
