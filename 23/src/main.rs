@@ -49,12 +49,12 @@ fn play() {
 
 		if guess == answer {
 			let statement = match i {
-				1 => "GENIUS!",
-				2 => "MAGNIFICENT!",
-				3 => "IMPRESSIVE!",
-				4 => "SPLENDID!",
-				5 => "GREAT!",
-				6 => "PHEW!",
+				0 => "GENIUS!",
+				1 => "MAGNIFICENT!",
+				2 => "IMPRESSIVE!",
+				3 => "SPLENDID!",
+				4 => "GREAT!",
+				5 => "PHEW!",
 				_ => "",
 			};
 
