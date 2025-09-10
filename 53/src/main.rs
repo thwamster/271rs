@@ -1,8 +1,15 @@
 fn main() {
-	println!("{}", hash(include_str!("input.txt").trim()));
+	let mut s = String::new();
+	std::io::stdin()
+		.read_line(&mut s)
+		.expect("Failed to read line");
+	s.truncate(s.len() - 1);
+
+	println!("\n{}\n", hash(s));
 }
 
-fn hash(input: &str) -> String {
+#[allow(non_snake_case)]
+fn hash(input: String) -> String {
 	let mut H: [u32; 8] = [
 		0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab,
 		0x5be0cd19,
@@ -33,20 +40,25 @@ fn hash(input: &str) -> String {
 	}
 	bytes.extend_from_slice(&(length * 8).to_be_bytes());
 
-	for c in 0..bytes.len() % 64 {
+	for c in 0..bytes.len() >> 6 {
 		let mut w: [u32; 64] = [0; 64];
 		for i in 0..16 {
-			w[i] = u32::from_be_bytes(bytes[c + i * 4..c + i * 4 + 4].try_into().unwrap());
+			w[i] = u32::from_be_bytes(
+				bytes[c * 64 + i * 4..c * 64 + i * 4 + 4]
+					.try_into()
+					.unwrap(),
+			);
 		}
 
 		for i in 16..64 {
-			let s0 = rotate_right(w[i - 15], 7)
-				^ rotate_right(w[i - 15], 18)
-				^ rotate_right(w[i - 15], 3);
-			let s1 = rotate_right(w[i - 2], 17)
-				^ rotate_right(w[i - 2], 19)
-				^ rotate_right(w[i - 2], 10);
-			w[i] = w[i - 16] + s0 + w[i - 7] + s1;
+			let s0: u32 =
+				rotate_right(w[i - 15], 7) ^ rotate_right(w[i - 15], 18) ^ (w[i - 15] >> 3);
+			let s1: u32 =
+				rotate_right(w[i - 2], 17) ^ rotate_right(w[i - 2], 19) ^ (w[i - 2] >> 10);
+			w[i] = w[i - 16]
+				.wrapping_add(s0)
+				.wrapping_add(w[i - 7])
+				.wrapping_add(s1);
 		}
 
 		let mut a = H[0];
@@ -59,47 +71,42 @@ fn hash(input: &str) -> String {
 		let mut h = H[7];
 
 		for i in 0..64 {
-			let S1 = rotate_right(e, 6) ^ rotate_right(e, 11) ^ rotate_right(e, 25);
-			let ch = (e & f) ^ (!e & g);
-			let temp1 = h + S1 + ch + K[i] + w[i];
-			let S0 = rotate_right(a, 2) ^ rotate_right(a, 13) ^ rotate_right(a, 22);
-			let maj = (a & b) ^ (a & c) ^ (b & c);
-			let temp2 = S0 + maj;
+			let S1: u32 = rotate_right(e, 6) ^ rotate_right(e, 11) ^ rotate_right(e, 25);
+			let ch: u32 = (e & f) ^ ((!e) & g);
+			let temp1: u32 = h
+				.wrapping_add(S1)
+				.wrapping_add(ch)
+				.wrapping_add(K[i])
+				.wrapping_add(w[i]);
+			let S0: u32 = rotate_right(a, 2) ^ rotate_right(a, 13) ^ rotate_right(a, 22);
+			let maj: u32 = (a & b) ^ (a & c) ^ (b & c);
+			let temp2: u32 = S0.wrapping_add(maj);
 
 			h = g;
 			g = f;
 			f = e;
-			e = d + temp1;
+			e = d.wrapping_add(temp1);
 			d = c;
 			c = b;
 			b = a;
-			a = temp1 + temp2;
+			a = temp1.wrapping_add(temp2);
 		}
 
-		H[0] = H[0] + a;
-		H[1] = H[1] + b;
-		H[2] = H[2] + c;
-		H[3] = H[3] + d;
-		H[4] = H[4] + e;
-		H[5] = H[5] + f;
-		H[6] = H[6] + g;
-		H[7] = H[7] + h;
+		H[0] = H[0].wrapping_add(a);
+		H[1] = H[1].wrapping_add(b);
+		H[2] = H[2].wrapping_add(c);
+		H[3] = H[3].wrapping_add(d);
+		H[4] = H[4].wrapping_add(e);
+		H[5] = H[5].wrapping_add(f);
+		H[6] = H[6].wrapping_add(g);
+		H[7] = H[7].wrapping_add(h);
 	}
 
 	for n in H {
-		hash.push_str(&n.to_string());
-		println!("{:b}", n);
+		hash.push_str(format!("{:x}", n).as_str());
 	}
 
 	hash
-}
-
-fn choice(u: u32, v: u32, w: u32) -> u32 {
-	(u & v) ^ ((!u) & w)
-}
-
-fn median(u: u32, v: u32, w: u32) -> u32 {
-	(u & v) ^ (u & w) ^ (v & w)
 }
 
 fn rotate_right(u: u32, v: u32) -> u32 {
