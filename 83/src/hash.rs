@@ -1,15 +1,6 @@
-fn main() {
-	let mut s = String::new();
-	std::io::stdin()
-		.read_line(&mut s)
-		.expect("Failed to read line");
-	s.truncate(s.len() - 1);
-
-	println!("\n{}\n", hash(s));
-}
-
 #[allow(non_snake_case)]
-fn hash(input: String) -> String {
+
+pub fn hash(input: &str) -> String {
 	let mut H: [u64; 8] = [
 		0x6a09e667f3bcc908,
 		0xbb67ae8584caa73b,
