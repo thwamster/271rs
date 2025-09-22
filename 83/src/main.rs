@@ -2,38 +2,54 @@
 
 mod hash;
 
+use num::Integer;
 use num::Num;
 use num::Signed;
 use num::bigint::BigInt as i;
 use num::bigint::Sign;
-use num::traits::One;
 use std::fs::File;
 use std::io::Read;
 
 fn main() {
 	let mut s = String::new();
+	/*
 	std::io::stdin()
 		.read_line(&mut s)
 		.expect("Failed to read line");
 	s.truncate(s.len() - 1);
+	*/
+	s.push_str("Hello, world!");
 
-	let n: i = get_random();
+	// let n: i = get_random();
+	let n: i = i::from_str_radix(
+		"47379675103498394144858916095175689779086087640336534911165206022228115974270",
+		10,
+	)
+	.unwrap();
 
-	println!("\nInput:\ns: {}\nn: {}", s, n.clone());
+	dbg!(s.clone());
+	dbg!(n.clone());
 
 	ecdsa(s.as_str(), n);
 }
 
-fn ecdsa(s: &str, n: i) {
-	let p: i = ((i::one()) << 255) - 19;
+fn ecdsa(input: &str, seed: i) {
+	let p: i = (i::from(1) << 255) - 19;
 	let base: (i, i) = (
-		("15112221349535400772501151409588531511454012693041857206046113283949847762202")
-			.parse()
-			.unwrap(),
-		("46316835694926478169428394003475163141307993866256225615783033603165251855960")
-			.parse()
-			.unwrap(),
+		i::from_str_radix(
+			"15112221349535400772501151409588531511454012693041857206046113283949847762202",
+			10,
+		)
+		.unwrap(),
+		i::from_str_radix(
+			"46316835694926478169428394003475163141307993866256225615783033603165251855960",
+			10,
+		)
+		.unwrap(),
 	);
+
+	dbg!(p.clone());
+	dbg!(base.clone());
 
 	let a: i = i::from(-1);
 	let d: i = find_positive_modulus(
@@ -43,12 +59,12 @@ fn ecdsa(s: &str, n: i) {
 	let x0: i = base.clone().0;
 	let y0: i = base.clone().1;
 
-	println!(
-		"\nCurve: {} * x^2 + y^2 = 1 + {} * x^2 * y^2\n\nKey Generation:",
-		x0, y0
-	);
+	dbg!(a.clone());
+	dbg!(d.clone());
+	dbg!(x0.clone());
+	dbg!(y0.clone());
 
-	let private_key: i = n;
+	let private_key: i = seed;
 	let public_key: (i, i) = apply_double_and_add_method(
 		base.clone(),
 		private_key.clone(),
@@ -57,14 +73,10 @@ fn ecdsa(s: &str, n: i) {
 		p.clone(),
 	);
 
-	println!(
-		"Private Key: {}\nPublic Key: ({}, {})",
-		private_key.clone(),
-		public_key.clone().0,
-		public_key.clone().1
-	);
+	dbg!(private_key.clone());
+	dbg!(public_key.clone());
 
-	let message: i = text_to_int(s);
+	let message: i = text_to_int(input);
 	let r: i = hashing(
 		format!(
 			"{}{}",
@@ -80,15 +92,13 @@ fn ecdsa(s: &str, n: i) {
 			.to_str_radix(10)
 			.as_str(),
 	) % p.clone();
-	let s: i = r + h * private_key;
+	let s: i = r.clone() + h.clone() * private_key;
 
-	println!(
-		"\nSigning:\nMessage: {}\nSignature (R, s):\nR: ({},{})\ns: {}",
-		message.clone(),
-		R.clone().0,
-		R.clone().1,
-		s.clone()
-	);
+	dbg!(message.clone());
+	dbg!(r.clone());
+	dbg!(R.clone());
+	dbg!(h.clone());
+	dbg!(s.clone());
 
 	h = hashing(
 		(R.clone().0 + public_key.clone().0 + message)
@@ -112,13 +122,9 @@ fn ecdsa(s: &str, n: i) {
 		p.clone(),
 	);
 
-	println!(
-		"\nVerification:\nP1: ({}, {})\nP2: ({}, {})\n\nResult:",
-		P1.clone().0,
-		P1.clone().1,
-		P2.clone().0,
-		P2.clone().1
-	);
+	dbg!(P1.clone());
+	dbg!(P2.clone());
+
 	if P1.0 == P2.0 && P1.1 == P2.1 {
 		println!("The signature is valid.");
 	} else {
@@ -127,11 +133,12 @@ fn ecdsa(s: &str, n: i) {
 }
 
 fn find_positive_modulus(a: i, p: i) -> i {
-	let n: i = if a < i::ZERO {
-		(a.clone() + p.clone() * (i::abs(&a) / p.clone()) + p.clone()) % p.clone()
-	} else {
-		a.clone()
-	};
+	let mut n: i = a.clone();
+
+	if a < i::ZERO {
+		n = (a.clone() + p.clone() * (i::abs(&a) / p.clone()) + p.clone()) % p.clone()
+	}
+
 	n
 }
 
@@ -143,6 +150,7 @@ fn gcd(mut a: i, mut b: i) -> i {
 	while a != i::ZERO {
 		(a, b) = (b.clone() % a.clone(), a.clone());
 	}
+
 	b
 }
 
@@ -151,14 +159,14 @@ fn find_mod_inverse(mut a: i, m: i) -> Option<i> {
 		a = (a.clone() + m.clone() * (i::abs(&a) / m.clone()) + m.clone()) % m.clone();
 	}
 
-	if gcd(a.clone(), m.clone()) != i::one() {
+	if gcd(a.clone(), m.clone()) != i::from(1) {
 		return Option::None;
 	}
 
-	let (mut u1, mut u2, mut u3): (i, i, i) = (i::one(), i::ZERO, a.clone());
-	let (mut v1, mut v2, mut v3): (i, i, i) = (i::ZERO, i::one(), m.clone());
+	let (mut u1, mut u2, mut u3): (i, i, i) = (i::from(1), i::from(0), a.clone());
+	let (mut v1, mut v2, mut v3): (i, i, i) = (i::from(0), i::from(1), m.clone());
 
-	while v1 != i::ZERO {
+	while v3 != i::from(0) {
 		let q = u3.clone() / v3.clone();
 		(v1, v2, v3, u1, u2, u3) = (
 			(u1.clone() - q.clone() * v1.clone()),
@@ -169,8 +177,7 @@ fn find_mod_inverse(mut a: i, m: i) -> Option<i> {
 			v3,
 		);
 	}
-
-	Some(u1 % m.clone())
+	Some(u1.clone().mod_floor(&m))
 }
 
 fn apply_double_and_add_method(P: (i, i), k: i, a: i, d: i, md: i) -> (i, i) {
@@ -178,7 +185,11 @@ fn apply_double_and_add_method(P: (i, i), k: i, a: i, d: i, md: i) -> (i, i) {
 
 	let k_as_binary: String = format!("{:b}", k);
 
-	for c in k_as_binary.chars() {
+	for (i, c) in k_as_binary.chars().enumerate() {
+		if i == 0 {
+			continue;
+		}
+
 		addition_point = point_addition(
 			addition_point.clone(),
 			addition_point.clone(),
@@ -196,6 +207,7 @@ fn apply_double_and_add_method(P: (i, i), k: i, a: i, d: i, md: i) -> (i, i) {
 			);
 		}
 	}
+
 	addition_point
 }
 

@@ -1,11 +1,12 @@
 fn main() {
-	let mut s = String::new();
-	std::io::stdin()
-		.read_line(&mut s)
-		.expect("Failed to read line");
-	s.truncate(s.len() - 1);
+	let mut s = include_str!("input.txt")
+		.lines()
+		.next()
+		.unwrap()
+		.to_string();
+	s.push_str("\n");
 
-	println!("\n{}\n", hash(s));
+	println!("{}", hash(s));
 }
 
 #[allow(non_snake_case)]
