@@ -6,6 +6,7 @@ use std::ops;
 pub struct Integer {
 	sign: Sign,
 	digits: Vec<u8>,
+	radix: u8,
 }
 
 impl Integer {
@@ -17,11 +18,21 @@ impl Integer {
 		let result: Integer = Integer {
 			sign: Sign::Zero,
 			digits: Vec::<u8>::new(),
+			radix: 10,
 		};
-		
 		let input: Vec<char> = n.chars().collect();
 
-		result
+		if input.len() == 0 {
+			return result;
+		}
+
+		if input.size() >= 2 && input.first() == Some('0') {
+			if input.get(1) == 'x' {
+				radix = 16;
+			} else if input.get(1) == 'b' {
+				radix = 2;
+			}
+		}
 	}
 }
 
