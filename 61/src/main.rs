@@ -31,5 +31,5 @@ fn main() {
 	}
 
 	o.chunks(76)
-		.for_each(|c| println!("{}", c.iter().collect::<String>()));
+		.for_each(|s| println!("{}", s.iter().collect::<String>()));
 }

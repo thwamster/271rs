@@ -1,0 +1,1 @@
+diff <(python3 base85.py main.rs) <(cargo run 2>/dev/null main.rs)
