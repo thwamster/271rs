@@ -1,32 +1,38 @@
 #![allow(unused)]
 mod num;
 
-use crate::num::Integer as i;
+use crate::num::ix;
 
 fn main() {
-	let a: i = i::from("123");
-	let b: i = i::from("-567");
-	let c: i = i::from("789");
-	let d: i = i::from("0xABC");
-	let e: i = i::from("-0xDEF");
+	let s: Vec<&str> = vec!["123", "-0xABC", "0b101", "123"];
+	let v: Vec<ix> = s.iter().map(|n| ix::from(n)).collect();
 
-	dbg!(&a);
-	dbg!(&b);
-	dbg!(&c);
-	dbg!(&d);
-	dbg!(&e);
-	test(&a, &b);
+	for i in 0..s.len() {
+		dbg!(&s[i], &v[i]);
+		println!();
+	}
+
+	for i in 0..s.len() {
+		for j in (i + 1)..s.len() {
+			test(v[i].clone(), v[j].clone());
+			println!();
+		}
+	}
 }
 
-fn test(a: &i, b: &i) {
-	dbg!(a + b);
-	dbg!(a - b);
-	dbg!(a * b);
-	dbg!(a / b);
-	dbg!(a % b);
-	dbg!(a << b);
-	dbg!(a >> b);
-	dbg!(*a == *b);
-	dbg!(*a > *b);
-	dbg!(*a < *b);
+fn test(a: ix, b: ix) {
+	dbg!(a.clone(), b.clone());
+	dbg!(a.clone() + b.clone());
+	dbg!(a.clone() - b.clone());
+	dbg!(b.clone() - a.clone());
+	dbg!(a.clone() * b.clone());
+	dbg!(a.clone() / b.clone());
+	dbg!(b.clone() / a.clone());
+	dbg!(a.clone() % b.clone());
+	dbg!(b.clone() % a.clone());
+	dbg!(-a.clone());
+	dbg!(-b.clone());
+	dbg!(a == b);
+	dbg!(a > b);
+	dbg!(a < b);
 }
