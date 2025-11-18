@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="EMPTY_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/11/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/12/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/23/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/31/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/52/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/61/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/62/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/73/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/83/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/91/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/92/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/93/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/A2/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/33/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/43/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/81/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/11/target" />
+      <excludeFolder url="file://$MODULE_DIR$/12/target" />
+      <excludeFolder url="file://$MODULE_DIR$/23/target" />
+      <excludeFolder url="file://$MODULE_DIR$/31/target" />
+      <excludeFolder url="file://$MODULE_DIR$/52/target" />
+      <excludeFolder url="file://$MODULE_DIR$/61/target" />
+      <excludeFolder url="file://$MODULE_DIR$/62/target" />
+      <excludeFolder url="file://$MODULE_DIR$/73/target" />
+      <excludeFolder url="file://$MODULE_DIR$/83/target" />
+      <excludeFolder url="file://$MODULE_DIR$/91/target" />
+      <excludeFolder url="file://$MODULE_DIR$/92/target" />
+      <excludeFolder url="file://$MODULE_DIR$/93/target" />
+      <excludeFolder url="file://$MODULE_DIR$/A2/target" />
+      <excludeFolder url="file://$MODULE_DIR$/33/target" />
+      <excludeFolder url="file://$MODULE_DIR$/43/target" />
+      <excludeFolder url="file://$MODULE_DIR$/81/target" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

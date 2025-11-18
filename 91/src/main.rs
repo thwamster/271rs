@@ -18,10 +18,10 @@ impl Rectangle {
 		self.h = (self.h as f32 * x) as u32;
 	}
 
-    fn scale(&mut self, x: u32) {
-        self.w = self.w * x;
-        self.h = self.h * x;
-    }
+	fn scale(&mut self, x: u32) {
+		self.w = self.w * x;
+		self.h = self.h * x;
+	}
 }
 
 fn main() {

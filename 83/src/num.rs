@@ -35,7 +35,7 @@ impl ix {
 			result.sign = 1;
 			nums.remove(0);
 		}
-        
+
 		if nums.len() >= 2 && nums[0] == '0' {
 			let r = match nums[1] {
 				'x' => Some(16),
