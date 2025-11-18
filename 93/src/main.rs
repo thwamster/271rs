@@ -1,4 +1,4 @@
-use packages::*;
+use traits::*;
 
 // Should this code be copy pasted?
 // No.

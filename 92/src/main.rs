@@ -1,4 +1,4 @@
-use packages::*;
+use boxes::*;
 
 fn main() {
 	let mut s = Stack::<String>::new();

@@ -170,10 +170,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bits"
-version = "0.1.0"
-
-[[package]]
 name = "blake3"
 version = "1.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -196,14 +192,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "box"
-version = "0.1.0"
-
-[[package]]
 name = "boxcar"
 version = "0.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "36f64beae40a84da1b4b26ff2761a5b895c12adc41dc25aaee1c4f2bbfe97a6e"
+
+[[package]]
+name = "boxes"
+version = "0.1.0"
 
 [[package]]
 name = "bumpalo"
@@ -776,6 +772,10 @@ dependencies = [
  "tokio-util",
  "tracing",
 ]
+
+[[package]]
+name = "hamming"
+version = "0.1.0"
 
 [[package]]
 name = "hashbrown"
