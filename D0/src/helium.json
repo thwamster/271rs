@@ -1,0 +1,11 @@
+{
+    "symbol": "He",
+    "phase_stp": "gas",
+    "group": 18,
+    "period": 1,
+    "boiling_point": {
+        "K": 4.222,
+        "C": -268.928,
+        "F": -452.070
+     }
+}

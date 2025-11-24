@@ -1,35 +1,32 @@
 fn main() {
-	let k: Vec<char> = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
-		.chars()
-		.collect();
+	let mut o : Vec<char> = vec!['<', '~'];
 
-	let mut o: Vec<char> = Vec::<char>::new();
 	for i in std::fs::read(std::env::args().nth(1).expect("No path provided"))
 		.expect("File not found")
-		.chunks(3)
+		.chunks(4)
 	{
-		match i.len() {
-			3 => {
-				o.push(k[(i[0] >> 2) as usize]);
-				o.push(k[(((i[0] & 0b11) << 4) | (i[1] >> 4)) as usize]);
-				o.push(k[(((i[1] & 0b1111) << 2) | (i[2] >> 6)) as usize]);
-				o.push(k[(i[2] & 0b111111) as usize]);
-			}
-			2 => {
-				o.push(k[(i[0] >> 2) as usize]);
-				o.push(k[(((i[0] & 0b11) << 4) | (i[1] >> 4)) as usize]);
-				o.push(k[((i[1] & 0b1111) << 2) as usize]);
-				o.push(k[64]);
-			}
-			_ => {
-				o.push(k[(i[0] >> 2) as usize]);
-				o.push(k[((i[0] & 0b11) << 4) as usize]);
-				o.push(k[64]);
-				o.push(k[64]);
-			}
+		let mut n : u32 = 0;
+		for j in 0..i.len() {
+			n += (i[j] as u32) << ((3 - j) * 8);
+		}
+
+		let mut v : Vec<char> = vec![];
+		for _ in 0..5 {
+			v.push(((n % 85 + 33) as u8) as char);
+			n /= 85;
+		}
+
+		for j in ((4 - i.len())..5).rev() {
+			o.push(v[j]);
 		}
 	}
 
-	o.chunks(76)
-		.for_each(|s| println!("{}", s.iter().collect::<String>()));
+	o.extend(['~', '>']);
+
+	for i in 0..o.len() {
+		if i != 0 && i % 80 == 0 {
+			println!();
+		}
+		print!("{}", o[i]);
+	}
 }

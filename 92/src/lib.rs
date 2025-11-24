@@ -1,77 +1,46 @@
-use std::fmt;
+pub trait Push<T> {
+	fn push(self, x : T) -> Self;
+}
 
-// #[derive(Debug)]
+pub trait Pop<T> {
+	fn pop(self) -> (Option<T>, Self);
+}
+
 pub struct Stack<T> {
-	value: Option<T>,
-	next: Option<Box<Stack<T>>>,
-	length: usize,
+	last : Option<T>,
+	values : Option<Box<Stack<T>>>,
+	length : usize
 }
 
-impl<T> Stack<T> {
-	pub fn new() -> Stack<T> {
-		Stack {
-			value: None,
-			next: None,
-			length: 0,
-		}
-	}
+pub struct Queue<T> {
+	first : Option<T>,
+	values : Option<Box<Stack<T>>>,
+	last : Option<T>,
+	length : usize
+}
 
-	pub fn push(self, x: T) -> Stack<T> {
+pub fn stack<T>() -> Stack<T> { Stack { last : None, values : None, length : 0 } }
+
+pub fn queue<T>() -> Queue<T> { Queue { last : None, values : None, first : None, length : 0 } }
+
+impl<T> Push<T> for Stack<T> {
+	fn push(self, x : T) -> Stack<T> {
 		if self.length == 0 {
-			return Stack {
-				value: Some(x),
-				next: None,
-				length: self.length + 1,
-			};
+			return Stack { last : Some(x), values : None, length : 1 };
 		}
 
-		Stack {
-			value: Some(x),
-			length: self.length + 1,
-			next: Some(Box::new(self)),
-		}
-	}
-
-	pub fn pop(self) -> (Stack<T>, Option<T>) {
-		if self.length == 0 {
-			return (self, None);
-		}
-
-		if self.length == 1 {
-			return (
-				Stack {
-					value: None,
-					length: 0,
-					next: None,
-				},
-				self.value,
-			);
-		}
-
-		(*(self.next.unwrap()), self.value)
+		Stack { last : Some(x), length : self.length + 1, values : Some(Box::new(self)) }
 	}
 }
 
-impl<T> fmt::Debug for Stack<T>
-where
-	T: fmt::Debug,
-{
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		write!(f, "[")?;
+impl<T> Pop<T> for Stack<T> {
+	fn pop(self) -> (Option<T>, Stack<T>) { (None, stack()) }
+}
 
-		if self.value.is_some() {
-			write!(f, "{:?}", self.value.as_ref().unwrap())?;
+impl<T> Push<T> for Queue<T> {
+	fn push(self, x : T) -> Queue<T> { queue() }
+}
 
-			let mut current: &Option<Box<Stack<T>>> = &self.next;
-			while current.is_some() {
-				write!(
-					f,
-					", {:?}",
-					current.as_ref().unwrap().value.as_ref().unwrap()
-				)?;
-				current = &(current.as_ref().unwrap().next);
-			}
-		}
-		write!(f, "]")
-	}
+impl<T> Pop<T> for Queue<T> {
+	fn pop(self) -> (Option<T>, Queue<T>) { (None, self) }
 }
