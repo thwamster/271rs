@@ -1,38 +1,42 @@
 fn main() {
-	let mut input = std::env::args().skip(1);
-	println![
-		"\"{}\"",
-		lcs(&input.next().expect("No input provided"), &input.next().expect("No input provided"))
-	];
+	println!["\"{}\"", lcs(&read_line(1), &read_line(2))];
 }
 
-fn lcs(s1 : &str, s2 : &str) -> String {
-	let (a1, a2) : (&[u8], &[u8]) = (&s1.as_bytes(), &s2.as_bytes());
-	let mut a : Vec<Vec<usize>> = vec![vec![0; a2.len() + 1]; a1.len() + 1];
+fn lcs(v1 : &Vec<u8>, v2 : &Vec<u8>) -> String {
+	let mut v : Vec<Vec<usize>> = vec![vec![0; v2.len() + 1]; v1.len() + 1];
 	let (mut i, mut j) : (usize, usize) = (0, 0);
 	let mut s : String = String::new();
 
-	for i in (0..a1.len()).rev() {
-		for j in (0..a2.len()).rev() {
-			a[i][j] = if a1[i] == a2[j] {
-				1 + a[i + 1][j + 1]
+	for i in (0..v1.len()).rev() {
+		for j in (0..v2.len()).rev() {
+			v[i][j] = if v1[i] == '\0' as u8 || v2[j] == '\0' as u8 {
+				0
+			}
+			else if v1[i] == v2[j] {
+				1 + v[i + 1][j + 1]
 			}
 			else {
-				usize::max(a[i + 1][j], a[i][j + 1])
+				usize::max(v[i + 1][j], v[i][j + 1])
 			}
 		}
 	}
 
-	while a[i][j] != 0 {
-		match usize::cmp(&a[i + 1][j], &a[i][j + 1]) as i8 {
-			1 => i = i + 1,
-			-1 => j = j + 1,
-			_ => {
-				s.push(a1[i] as char);
-				(i, j) = (i + 1, j + 1);
-			}
+	while i < v1.len() && j < v2.len() {
+		if v1[i] == v2[j] {
+			s.push(v1[i] as char);
+			(i, j) = (i + 1, j + 1);
+		}
+		else if v[i + 1][j] >= v[i][j + 1] {
+			i += 1;
+		}
+		else {
+			j += 1;
 		}
 	}
 
 	s
+}
+
+fn read_line(n : usize) -> Vec<u8> {
+	std::env::args().nth(n).expect("No path provided").into_bytes()
 }
