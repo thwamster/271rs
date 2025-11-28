@@ -31,6 +31,7 @@
       <sourceFolder url="file://$MODULE_DIR$/C1/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/c2/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/D0/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/B2/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/11/target" />
       <excludeFolder url="file://$MODULE_DIR$/12/target" />
       <excludeFolder url="file://$MODULE_DIR$/23/target" />
